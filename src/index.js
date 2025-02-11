@@ -1,6 +1,6 @@
 export default {
 	async fetch(request, env, ctx) {
-		const url = "https://jsonplaceholder.typicode.com/todos/1";
+		const url = "https://api.dailyinvoice.com.ng/waitlist";
 
 		// gatherResponse returns both content-type & response body as a string
 		async function gatherResponse(response) {
