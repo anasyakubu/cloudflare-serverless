@@ -1,15 +1,21 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
-
 export default {
 	async fetch(request, env, ctx) {
-		return new Response('Hello Anas Yakubu!');
+		const url = "https://jsonplaceholder.typicode.com/todos/1";
+
+		// gatherResponse returns both content-type & response body as a string
+		async function gatherResponse(response) {
+			const { headers } = response;
+			const contentType = headers.get("content-type") || "";
+			if (contentType.includes("application/json")) {
+				return { contentType, result: JSON.stringify(await response.json()) };
+			}
+			return { contentType, result: response.text() };
+		}
+
+		const response = await fetch(url);
+		const { contentType, result } = await gatherResponse(response);
+
+		const options = { headers: { "content-type": contentType } };
+		return new Response(result, options);
 	},
 };
